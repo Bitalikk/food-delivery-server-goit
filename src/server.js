@@ -1,23 +1,14 @@
 const http = require('http');
-const url = require('url');
+const requestHendler = require('./requestHendler/requestHendler');
 
-const morgan = require('morgan');
 const router = require('./router/router');
 
-const logger = morgan('combined');
-
 const startServer = port => {
-  const server = http.createServer((request, response) => {
-    
-    const parsedUrl = url.parse(request.url);
-
-    const func = router[parsedUrl.pathname] || router.default;
-
-    logger(request, response, () => func(request, response));
-    
-  })
+  const server = http.createServer(requestHendler)
   
-  server.listen(port);
+  server.listen(port, err => {
+    console.log(`Server listen port ${port}`)
+  });
 }
 
 module.exports = startServer;

@@ -1,30 +1,32 @@
-const fs = require("fs");
 const path = require("path");
+const fs = require("fs");
+const bodyParser = require("../../bodyParser/bodyParser");
 
-const signUpRoute = (request, response) => {
-  if (request.method === "POST" && request.url.includes("signup")) {
-    let body = "";
+const signUpRoute = async (req, res) => {
+  try {
+    const user = await bodyParser(req);
 
-    request.on("data", function(data) {
-      body += data;
+    const { username } = user;
+    const userPath = path.join(
+      __dirname,
+      "..",
+      "..",
+      "db",
+      "users",
+      `${username}.json`
+    );
+
+    fs.writeFile(userPath, JSON.stringify(user), err => {
+      if (err) {
+        console.error(err);
+      }
     });
 
-    request.on("end", function() {
-      let incomeData = JSON.parse(body);
-      const { username } = incomeData;
-
-      fs.writeFile(
-        path.join(__dirname, "../../db/users/", `${username}.json`),
-        body,
-        err => {
-          if (err) throw err;
-        }
-      );
-      response.writeHead(200, { "Content-Type": "application/json" });
-      response.write(JSON.stringify({ status: "success", user: incomeData }));
-      response.end();
-    });
-  } 
+    res.writeHead(200, { "Content-Type": "application/json" });
+    res.end(JSON.stringify(user));
+  } catch (err) {
+    console.error(err);
+  }
 };
 
 module.exports = signUpRoute;

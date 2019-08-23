@@ -3,9 +3,13 @@ const productsRoute = require('./products/products');
 const signUpRoute = require('./users/sign-up-route');
 
 const router = {
-  '/signup': signUpRoute,
-  '/products': productsRoute,
-  default: mainRoute,
+  getProducts: {
+    '/': mainRoute,
+    '/products': productsRoute,
+  },
+  createUser: {
+    '/signup': signUpRoute,
+  }
 };
 
 module.exports = router;

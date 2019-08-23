@@ -1,10 +1,10 @@
-const mainRoute = (request, response) => {
-  response.writeHead(200, {
-    "Content-type": "text/html"
-  });
+const path = require('path');
+const fs = require('fs');
 
-  response.write("<h1>Main products page</h1>");
-  response.end();
+const mainRoute = (req, res) => {
+  res.statusCode = 200;
+  res.setHeader("Content-Type", "text/html");
+  res.end("<h1>This is main page</h1>");
 }
 
 module.exports = mainRoute;

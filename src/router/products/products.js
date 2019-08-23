@@ -1,18 +1,19 @@
-const fs = require('fs');
 const path = require('path');
+const fs = require('fs');
 
-const productsRoute = (request, response) => {
-  if (request.method === 'GET' && request.url.includes('products')) {
-    const productsFilePath = path.join(__dirname, '..', '..', 'db', 'products', 'all-products.json');
-    const products = fs.readFileSync(productsFilePath);
+const productsPath = path.join(__dirname, '..', '..', 'db', 'products', 'all-products.json');
 
-    response.writeHead(200, {
-      "Content-Type": "application/json",
-    });
-    response.write(products);
-    response.end();
-    return;
-  };
-};
+const productsRoute = (req, res) => {
+  fs.open(productsPath, "r", (err, fd) => {
+    fs.readFile(fd, 'utf8', (err, data) => {
+      if (err) {
+        console.error(err);
+      }
+
+      res.writeHead(200, { "Content-Type": "application/json" });
+      res.end(data);
+    })
+  })
+}
 
 module.exports = productsRoute;
